@@ -1,5 +1,6 @@
 import requests
 from datetime import datetime
+import csv
 
 
 def daily(user) -> int:
@@ -23,4 +24,19 @@ def daily(user) -> int:
     else:
         return 0
 
-print(daily('djumanov'))
+
+def daily_report_by_group(file_name):
+    report = [['first name', 'last name', 'total']]
+    with open(file_name) as csv_file:
+        dict_reader = csv.DictReader(csv_file)
+
+        for user in dict_reader:
+            count = daily(user['username'])
+            report.append([user['first name'], user['last name'], count])
+
+    with open(f"daily - {file_name}", "w") as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerows(report)
+
+file_name = 'A.csv'
+daily_report_by_group(file_name)
