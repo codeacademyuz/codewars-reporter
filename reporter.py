@@ -10,13 +10,14 @@ def daily(user) -> int:
     if response.status_code == 200:
         data = response.json()
 
+        now = datetime.now()
         count = 0
         for CompletedChallenge in data['data']:
             date = datetime.fromisoformat(CompletedChallenge['completedAt'])
 
-            now = datetime.now()
+            d = (now - date.replace(tzinfo=None))
 
-            if date.day == now.day:
+            if d.total_seconds() <= 86400:
                 count += 1
 
         return count
@@ -39,4 +40,4 @@ def daily_report_by_group(file_name):
         writer.writerows(report)
 
 file_name = 'A.csv'
-daily_report_by_group(file_name)
+print(daily('djumanov'))
